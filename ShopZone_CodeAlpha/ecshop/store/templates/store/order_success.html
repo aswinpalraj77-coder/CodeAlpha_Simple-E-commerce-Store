@@ -1,0 +1,40 @@
+{% extends 'store/base.html' %}
+{% block title %}Order Confirmed — ShopZone{% endblock %}
+{% block content %}
+<div style="text-align:center;padding:4rem 2rem;max-width:600px;margin:0 auto;">
+    <div style="font-size:5rem;margin-bottom:1.5rem;animation:bounce 0.6s ease">🎉</div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:3px;color:var(--accent);margin-bottom:0.5rem;">ORDER CONFIRMED!</h1>
+    <p style="color:var(--muted);font-size:1.1rem;margin-bottom:2rem;">Thank you for shopping with ShopZone!</p>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:left;margin-bottom:2rem;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+            <span style="color:var(--muted);">Order ID</span>
+            <strong>#{{ order.id }}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+            <span style="color:var(--muted);">Status</span>
+            <span style="color:#4ade80;font-weight:600;">✓ {{ order.get_status_display }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+            <span style="color:var(--muted);">Total</span>
+            <strong style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--accent);">₹{{ order.total_price }}</strong>
+        </div>
+        <div>
+            <span style="color:var(--muted);display:block;margin-bottom:0.3rem;">Delivery Address</span>
+            <span style="font-size:0.9rem;">{{ order.address }}</span>
+        </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/my-orders/" class="btn btn-outline">View All Orders</a>
+        <a href="/" class="btn btn-primary">Continue Shopping →</a>
+    </div>
+</div>
+
+<style>
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+</style>
+{% endblock %}

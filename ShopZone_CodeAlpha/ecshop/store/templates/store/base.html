@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopZone{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #FF3B3B;
+            --primary-dark: #CC0000;
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --surface2: #1E1E1E;
+            --border: #2A2A2A;
+            --text: #F0F0F0;
+            --muted: #888;
+            --accent: #FFD700;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            height: 64px;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 2px;
+            flex-shrink: 0;
+        }
+
+        .logo span { color: var(--text); }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.6rem 1rem;
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .search-bar input::placeholder { color: var(--muted); }
+
+        .search-bar button {
+            background: var(--primary);
+            border: none;
+            padding: 0 1rem;
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .cart-btn {
+            background: var(--primary) !important;
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .cart-count {
+            background: var(--accent);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 10px;
+        }
+
+        /* MESSAGES */
+        .messages {
+            max-width: 1280px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-success { background: #0d2e0d; border: 1px solid #1a5c1a; color: #4ade80; }
+        .alert-error { background: #2e0d0d; border: 1px solid #5c1a1a; color: #f87171; }
+
+        /* MAIN */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 4rem;
+        }
+
+        footer strong { color: var(--primary); }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-gold { background: var(--accent); color: #000; }
+        .btn-gold:hover { background: #e6c200; }
+
+        /* PRODUCT CARD */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .product-card-body { padding: 1rem; }
+
+        .product-card-category {
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .product-card-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0.3rem 0;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+        }
+
+        .product-card-name:hover { color: var(--primary); }
+
+        .product-card-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .product-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+        }
+
+        /* SECTION HEADINGS */
+        .section-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-heading span { color: var(--primary); }
+
+        /* FORMS */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 500; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+
+        /* CATEGORY PILLS */
+        .category-pills {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .category-pill {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="logo">SHOP<span>ZONE</span></a>
+
+        <form class="search-bar" action="/" method="GET">
+            <input type="text" name="search" placeholder="Search products..." value="{{ request.GET.search }}">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <span style="color:var(--muted);font-size:0.85rem;">Hi, <strong style="color:var(--text)">{{ user.username }}</strong></span>
+                <a href="/my-orders/">My Orders</a>
+                {% if user.is_staff %}
+                    <a href="/admin/" style="color:var(--accent)!important;">⚙ Admin</a>
+                {% endif %}
+                <a href="/logout/">Logout</a>
+            {% else %}
+                <a href="/login/">Login</a>
+                <a href="/register/">Register</a>
+            {% endif %}
+
+            <a href="/cart/" class="cart-btn">
+                🛒 Cart
+                {% with total=request.session.cart %}
+                    {% if total %}
+                        <span class="cart-count">{{ total.values|length }}</span>
+                    {% endif %}
+                {% endwith %}
+            </a>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <p>2026 <strong>ShopZone</strong> — Built with Django | CodeAlpha Internship Project</p>
+</footer>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
