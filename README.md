@@ -47,8 +47,8 @@ Open: **http://127.0.0.1:8000/**
 | | |
 |---|---|
 | **URL** | http://127.0.0.1:8000/admin/ |
-| **Username** | *(your superuser)* |
-| **Password** | *(your password)* |
+| **Username** | *aswin* |
+| **Password** | *aswin@2007* |
 
 ---
 
